@@ -4,7 +4,34 @@ import java.util.Scanner;
 
 public class SneakerController {
     public static Scanner scanner = new Scanner(System.in);
-    public void displayMainMenu(){
+    public void displayAccountMenu(){
+        while(true){
+            System.out.println(" ====================================");
+            System.out.println("|      Sneaker Store Management      |");
+            System.out.println("|                                    |");
+            System.out.println("| 1. Đăng nhập                       |");
+            System.out.println("| 2. Đăng Ký                         |");
+            System.out.println("| 3. Exit                            |");
+            System.out.println(" ====================================");
+            System.out.print("Choose a option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            switch(choice){
+                case 1:
+                    displayMainMenu();
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    System.out.println("Cảm ơn vì đã sử dụng ứng dụng");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Lựa chọn không hợp lệ, vui lòng chọn lại!");
+            }
+        }
+    }
+    private void displayMainMenu(){
         while (true){
             System.out.println(" ====================================");
             System.out.println("|      Sneaker Store Management      |");
@@ -25,12 +52,10 @@ public class SneakerController {
                     displayCustomerManagement();
                     break;
                 case 3:
-                    displayProductManagement();
+                    displayShopingCartMenu();
                     break;
                 case 4:
-                    System.out.println("Cảm ơn vì đã sử dụng ứng dụng");
-                    System.exit(0);
-                    break;
+                    return;
                 default:
                     System.out.println("Lựa chọn không hợp lệ, vui lòng chọn lại!");
             }
@@ -93,7 +118,35 @@ public class SneakerController {
         }
     }
 
-    private void displayProductManagement(){
+    private void displayShopingCartMenu(){
+        while (true){
+            System.out.println(" ====================================");
+            System.out.println("|         Shoping Cart Menu          |");
+            System.out.println("|                                    |");
+            System.out.println("| 1. Hiển thị danh sách sản phẩm     |");
+            System.out.println("| 2. Thêm sản phẩm vào giỏ hàng      |");
+            System.out.println("| 3. Hiển thị giỏ hàng               |");
+            System.out.println("| 4. Thanh toán                      |");
+            System.out.println("| 5. Trở về menu chính               |");
+            System.out.println(" ====================================");
+            System.out.print("Choose a option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            switch (choice){
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    return;
+                default:
+                    System.out.println("Lựa chọn không hợp lệ, vui lòng chọn lại!");
+            }
+        }
         
     }
 }
