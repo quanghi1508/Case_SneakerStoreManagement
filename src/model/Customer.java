@@ -1,14 +1,14 @@
 package model;
 
 public class Customer {
-    private int code;
+    private String code;
     private String name;
-    private int dayofbirth;
+    private String dayofbirth;
     private String gender;
-    private int phone;
+    private String phone;
     private String address;
 
-    public Customer(int code, String name, int dayofbirth, String gender, int phone, String address) {
+    public Customer(String code, String name, String dayofbirth, String gender, String phone, String address, String value) {
         this.code = code;
         this.name = name;
         this.dayofbirth = dayofbirth;
@@ -17,11 +17,11 @@ public class Customer {
         this.address = address;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -33,11 +33,11 @@ public class Customer {
         this.name = name;
     }
 
-    public int getDayofbirth() {
+    public String getDayofbirth() {
         return dayofbirth;
     }
 
-    public void setDayofbirth(int dayofbirth) {
+    public void setDayofbirth(String dayofbirth) {
         this.dayofbirth = dayofbirth;
     }
 
@@ -49,11 +49,11 @@ public class Customer {
         this.gender = gender;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -63,6 +63,11 @@ public class Customer {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public static Customer fromCSV(String csvLine){
+        String[] values = csvLine.split(",");
+        return new Customer(values[0], values[1], values[2], values[3], values[4], values[5], values[6]);
     }
 
     @Override

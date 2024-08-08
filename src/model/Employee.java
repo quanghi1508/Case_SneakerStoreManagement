@@ -1,19 +1,29 @@
 package model;
 
 public class Employee {
-    private int code;
+    private String code;
     private String name;
-    private int dayofbirth;
+    private String dayofbirth;
     private String gender;
-    private int cccd;
-    private int phone;
+    private String cccd;
+    private String phone;
     private String position;
 
-    public int getCode() {
+    public Employee(String code, String name, String dayofbirth, String gender, String cccd, String phone, String position) {
+        this.code = code;
+        this.name = name;
+        this.dayofbirth = dayofbirth;
+        this.gender = gender;
+        this.cccd = cccd;
+        this.phone = phone;
+        this.position = position;
+    }
+
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -25,11 +35,11 @@ public class Employee {
         this.name = name;
     }
 
-    public int getDayofbirth() {
+    public String getDayofbirth() {
         return dayofbirth;
     }
 
-    public void setDayofbirth(int dayofbirth) {
+    public void setDayofbirth(String dayofbirth) {
         this.dayofbirth = dayofbirth;
     }
 
@@ -41,19 +51,19 @@ public class Employee {
         this.gender = gender;
     }
 
-    public int getCccd() {
+    public String getCccd() {
         return cccd;
     }
 
-    public void setCccd(int cccd) {
+    public void setCccd(String cccd) {
         this.cccd = cccd;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -65,19 +75,13 @@ public class Employee {
         this.position = position;
     }
 
-    public Employee(int code, String name, int dayofbirth, String gender, int cccd, int phone, String position) {
-        this.code = code;
-        this.name = name;
-        this.dayofbirth = dayofbirth;
-        this.gender = gender;
-        this.cccd = cccd;
-        this.phone = phone;
-        this.position = position;
-
+    public static Employee fromCSV(String csvLine){
+        String[] values = csvLine.split(",");
+        return new Employee(values[0], values[1], values[2], values[3], values[4], values[5], values[6]);
     }
 
     public String convertData() {
-        return "" + code + "," + name + "," + dayofbirth + "," + gender + "," + cccd + "," + phone+ "," +position;
+        return " " + code + "," + name + "," + dayofbirth + "," + gender + "," + cccd + "," + phone+ "," +position;
     }
 
     @Override
