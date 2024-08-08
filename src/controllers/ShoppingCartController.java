@@ -1,6 +1,5 @@
 package controllers;
 
-import model.Cart;
 import model.Customer;
 import model.Employee;
 import model.Product;
@@ -21,13 +20,13 @@ public class ShoppingCartController {
     private List<Product> products;
     private List<Customer> customers;
     private List<Employee> employees;
-    private List<Cart> cart;
+    private List<Product> cart;
 
     public ShoppingCartController() {
         products = loadProducts();
         customers = loadCustomers();
         employees = loadEmployees();
-        cart = new ArrayList<>();
+        cart = new ArrayList<Product>();
     }
 
     public List<Product> loadProducts(){
@@ -76,10 +75,10 @@ public class ShoppingCartController {
                     displayProducts();
                     break;
                 case 2:
-//                    addProductToCart();
+                    addProductToCart();
                     break;
                 case 3:
-//                    displayCart();
+                    displayCart();
                     break;
                 case 4:
                     calculateTotal();
@@ -99,41 +98,41 @@ public class ShoppingCartController {
         }
     }
 
-//    private void addProductToCart(){
-//        System.out.println("Nhập code của sảm phẩm muốn thêm vào giỏ hàng: ");
-//        String productCode = scanner.nextLine();
-//        Product selectedProduct = null;
-//        for (Product product : products){
-//            if(product.getCode().equals(productCode)){
-//                selectedProduct = product;
-//                break;
-//            }
-//        }
-//        if (selectedProduct != null){
-//            cart.add(selectedProduct);
-//            System.out.println("Sản phẩm "+selectedProduct+" đã được thêm vào giỏ hàng.");
-//            FileUtil.writeToFile(CART_FILE, selectedProduct.convertData());
-//        }else {
-//            System.out.println("Không tìm thấy sản phẩm!");
-//        }
-//    }
+    private void addProductToCart(){
+        System.out.println("Nhập code của sảm phẩm muốn thêm vào giỏ hàng: ");
+        String productCode = scanner.nextLine();
+        Product selectedProduct = null;
+        for (Product product : products){
+            if(product.getCode().equals(productCode)){
+                selectedProduct = product;
+                break;
+            }
+        }
+        if (selectedProduct != null){
+            cart.add(selectedProduct);
+            System.out.println("Sản phẩm "+selectedProduct+" đã được thêm vào giỏ hàng.");
+            FileUtil.writeToFile(CART_FILE, selectedProduct.convertData());
+        }else {
+            System.out.println("Không tìm thấy sản phẩm!");
+        }
+    }
 
-//    private void displayCart(){
-//        System.out.println("Nội dung giỏ hàng: ");
-//        FileUtil.readFromFile(cart.toString());
-//        if(cart.size() == 0){
-//            System.out.println("Giỏ hàng rỗng!");
-//        }else{
-//            for (Cart cart1 : cart){
-//                System.out.println();
-//            }
-//        }
-//
-//    }
+    private void displayCart(){
+        System.out.println("Nội dung giỏ hàng: ");
+
+        if(cart.size() == 0){
+            System.out.println("Giỏ hàng rỗng!");
+        }else{
+            for (Product cart1 : cart){
+                System.out.println(cart1);
+            }
+        }
+
+    }
 
     private void calculateTotal(){
         double total =  0;
-        for (Cart cart1 : cart){
+        for (Product cart1 : cart){
             total += cart1.getPrice();
         }
         System.out.println("total price: " + total);

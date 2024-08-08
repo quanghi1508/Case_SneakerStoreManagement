@@ -56,7 +56,7 @@ public class Cart {
     }
 
     public String convertData(){
-        return " " + code + "," + name + "," + size + "," + type + "," + price;
+        return code + "," + name + "," + size + "," + type + "," + price;
     }
 
     public static Cart fromCSV(String csvLine){

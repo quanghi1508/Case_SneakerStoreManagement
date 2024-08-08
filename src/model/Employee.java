@@ -3,16 +3,16 @@ package model;
 public class Employee {
     private String code;
     private String name;
-    private String dayofbirth;
+    private String dateofbirth;
     private String gender;
     private String cccd;
     private String phone;
     private String position;
 
-    public Employee(String code, String name, String dayofbirth, String gender, String cccd, String phone, String position) {
+    public Employee(String code, String name, String dateofbirth, String gender, String cccd, String phone, String position) {
         this.code = code;
         this.name = name;
-        this.dayofbirth = dayofbirth;
+        this.dateofbirth = dateofbirth;
         this.gender = gender;
         this.cccd = cccd;
         this.phone = phone;
@@ -35,12 +35,12 @@ public class Employee {
         this.name = name;
     }
 
-    public String getDayofbirth() {
-        return dayofbirth;
+    public String getDateofbirth() {
+        return dateofbirth;
     }
 
-    public void setDayofbirth(String dayofbirth) {
-        this.dayofbirth = dayofbirth;
+    public void setDateofbirth(String dateofbirth) {
+        this.dateofbirth = dateofbirth;
     }
 
     public String getGender() {
@@ -81,7 +81,7 @@ public class Employee {
     }
 
     public String convertData() {
-        return " " + code + "," + name + "," + dayofbirth + "," + gender + "," + cccd + "," + phone+ "," +position;
+        return " " + code + "," + name + "," + dateofbirth + "," + gender + "," + cccd + "," + phone+ "," +position;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Employee {
         return "Employee{" +
                 "code=" + code +
                 ", name='" + name + '\'' +
-                ", dayofbirth=" + dayofbirth +
+                ", dayofbirth=" + dateofbirth +
                 ", gender='" + gender + '\'' +
                 ", cccd=" + cccd +
                 ", phone=" + phone +

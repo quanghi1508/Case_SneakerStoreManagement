@@ -6,11 +6,10 @@ import java.util.List;
 
 public class FileUtil {
     public static void writeToFile(String fileName,String data){
-        System.out.println(data);
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))){
             writer.write(data);
             writer.newLine();
-        } catch (IOException e) {
+        } catch (IOException e ) {
             e.printStackTrace();
         }
     }

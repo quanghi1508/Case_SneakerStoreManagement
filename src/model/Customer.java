@@ -3,15 +3,15 @@ package model;
 public class Customer {
     private String code;
     private String name;
-    private String dayofbirth;
+    private String dateofbirth;
     private String gender;
     private String phone;
     private String address;
 
-    public Customer(String code, String name, String dayofbirth, String gender, String phone, String address, String value) {
+    public Customer(String code, String name, String dateofbirth, String gender, String phone, String address) {
         this.code = code;
         this.name = name;
-        this.dayofbirth = dayofbirth;
+        this.dateofbirth = dateofbirth;
         this.gender = gender;
         this.phone = phone;
         this.address = address;
@@ -34,11 +34,11 @@ public class Customer {
     }
 
     public String getDayofbirth() {
-        return dayofbirth;
+        return dateofbirth;
     }
 
-    public void setDayofbirth(String dayofbirth) {
-        this.dayofbirth = dayofbirth;
+    public void setDayofbirth(String dateofbirth) {
+        this.dateofbirth = dateofbirth;
     }
 
     public String getGender() {
@@ -67,15 +67,18 @@ public class Customer {
 
     public static Customer fromCSV(String csvLine){
         String[] values = csvLine.split(",");
-        return new Customer(values[0], values[1], values[2], values[3], values[4], values[5], values[6]);
+        return new Customer(values[0], values[1], values[2], values[3], values[4], values[5]);
     }
 
+    public String convertData(){
+        return code + "," + name + "," + dateofbirth + "," + gender + "," +  address;
+    }
     @Override
     public String toString() {
         return "Customer{" +
                 "code=" + code +
                 ", name='" + name + '\'' +
-                ", dayofbirth=" + dayofbirth +
+                ", dayofbirth=" + dateofbirth +
                 ", gender='" + gender + '\'' +
                 ", phone=" + phone +
                 ", address='" + address + '\'' +
