@@ -66,15 +66,16 @@ public class User {
         this.password = password;
     }
 
-    public static User fromCSV(String csvLine){
+    public static User fromCSV(String csvLine) {
         String[] values = csvLine.split(",");
         return new User(values[0], values[1], values[2], values[3], values[4], values[5]);
 
     }
 
-    public String convertData(){
-        return  name + "," + dateofbirth + "," + email + "," + phone + "," + username + "," + password;
+    public String convertData() {
+        return String.join(",", name, dateofbirth, email, phone, username, password);
     }
+
     @Override
     public String toString() {
         return "User{" +

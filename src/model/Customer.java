@@ -33,11 +33,11 @@ public class Customer {
         this.name = name;
     }
 
-    public String getDayofbirth() {
+    public String getDataofbirth() {
         return dateofbirth;
     }
 
-    public void setDayofbirth(String dateofbirth) {
+    public void setDataofbirth(String dateofbirth) {
         this.dateofbirth = dateofbirth;
     }
 
@@ -71,7 +71,7 @@ public class Customer {
     }
 
     public String convertData(){
-        return code + "," + name + "," + dateofbirth + "," + gender + "," +  address;
+        return String.join(",", code,name,dateofbirth,gender,phone,address);
     }
     @Override
     public String toString() {

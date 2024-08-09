@@ -1,14 +1,16 @@
 package controllers;
 
+import Utility.EmptyFileException;
 import model.*;
 import utils.FileUtil;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class SneakerController {
-    private static final String CUSTOMER_FILE  = "src/data/customers.csv";
+    private static final String CUSTOMER_FILE = "src/data/customers.csv";
     private static final String EMPLOYEE_FILE = "src/data/employees.csv";
     private static final String CART_FILE = "src/data/cart.csv";
     private static final String PRODUCT_FILE = "src/data/products.csv";
@@ -18,53 +20,34 @@ public class SneakerController {
     private List<Customer> customers;
     private List<Employee> employees;
     private List<Product> carts;
-    private List<User> users;
+    public List<User> users;
 
-    public SneakerController() {
+    public SneakerController() throws EmptyFileException {
         products = loadProducts();
-        customers = loadCustomers();
         employees = loadEmployees();
+        customers = loadCustomers();
         users = loadUsers();
         carts = new ArrayList<Product>();
     }
 
 
-    private List<User> loadUsers() {
-        List<User> users = new ArrayList<>();
-        List<String> lines = FileUtil.readFromFile(USER_FILE);
-        if (lines.size() != 0) {
-            for (String line : lines) {
-                users.add(User.fromCSV(line));
-            }
-            return users;
-        }
-        return users;
+    private List<User> loadUsers() throws EmptyFileException {
+
+        return FileUtil.readUserFromFile(USER_FILE);
     }
 
-    public List<Product> loadProducts(){
-        List<Product> products = new ArrayList<>();
-        List<String> lines = FileUtil.readFromFile(PRODUCT_FILE);
-        for(String line : lines){
-            products.add(Product.fromCSV(line));
-        }
-        return products;
+    public List<Product> loadProducts() {
+        return FileUtil.readProductFromFile(PRODUCT_FILE);
     }
-    public List<Customer> loadCustomers(){
-        List<Customer> customers = new ArrayList<>();
-        List<String> lines = FileUtil.readFromFile(CUSTOMER_FILE);
-        for(String line : lines){
-            customers.add(Customer.fromCSV(line));
-        }
-        return customers;
+
+    public List<Customer> loadCustomers() {
+        return FileUtil.readCustomerFromFile(CUSTOMER_FILE);
     }
-    public List<Employee> loadEmployees(){
-        List<Employee> employees = new ArrayList<>();
-        List<String> lines = FileUtil.readFromFile(EMPLOYEE_FILE);
-        for(String line : lines){
-            employees.add(Employee.fromCSV(line));
-        }
-        return employees;
+
+    public List<Employee> loadEmployees() {
+        return FileUtil.readEmployeeFromFile(EMPLOYEE_FILE);
     }
+
     ShoppingCartController shoppingcart = new ShoppingCartController();
     public static Scanner scanner = new Scanner(System.in);
 
@@ -108,12 +91,13 @@ public class SneakerController {
         String password = scanner.nextLine();
         User newUser = new User(name, dateofbirth, email, phone, username, password);
         users.add(newUser);
-        FileUtil.writeToFile(USER_FILE, newUser.convertData());
+        FileUtil.writeUserToFile(USER_FILE, users);
         System.out.println("Đăng ký thành công!");
         return true;
     }
-    public boolean login(){
-        while(true) {
+
+    public boolean login() {
+        while (true) {
             System.out.println("========= Đăng nhập =========");
             System.out.println("Username:");
             String username = scanner.nextLine();
@@ -131,20 +115,22 @@ public class SneakerController {
     }
 
 
-    public void displayMainMenu(){
-        while (true){
-            System.out.println(" ====================================");
-            System.out.println("|      Sneaker Store Management      |");
-            System.out.println("|                                    |");
-            System.out.println("| 1. Quản lí nhân viên               |");
-            System.out.println("| 2. Quản lí khách hàng              |");
-            System.out.println("| 3. Quản lí sản phẩm                |");
-            System.out.println("| 4. Exit                            |");
-            System.out.println(" ====================================");
+    public void displayMainMenu() {
+        while (true) {
+            System.out.println(" ============================================");
+            System.out.println("|      Sneaker Store Management              |");
+            System.out.println("|                                            |");
+            System.out.println("| 1. Quản lí nhân viên                       |");
+            System.out.println("| 2. Quản lí khách hàng                      |");
+            System.out.println("| 3. Giỏ hàng                                |");
+            System.out.println("| 4. Quản lí bán hàng                        |");
+            System.out.println("| 5. Hiển thị danh sách sản phẩm và người mua|");
+            System.out.println("| 6. Exit                                    |");
+            System.out.println(" =============================================");
             System.out.print("Choose a option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
-            switch (choice){
+            switch (choice) {
                 case 1:
                     displayEmployeeManagement();
                     break;
@@ -155,15 +141,21 @@ public class SneakerController {
                     shoppingcart.displayShoppingCartMenu();
                     break;
                 case 4:
-                    return;
+                    saleManagement();
+                    break;
+                case 5:
+                    displayProductCustomer();
+                    break;
+                    case 6:
+                        return;
                 default:
                     System.out.println("Lựa chọn không hợp lệ, vui lòng chọn lại!");
             }
         }
     }
 
-    public void displayEmployeeManagement(){
-        while (true){
+    public void displayEmployeeManagement() {
+        while (true) {
             System.out.println(" ====================================");
             System.out.println("|        Employee Management         |");
             System.out.println("|                                    |");
@@ -175,7 +167,7 @@ public class SneakerController {
             System.out.print("Choose a option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
-            switch (choice){
+            switch (choice) {
                 case 1:
                     displayEmployee();
                     break;
@@ -192,17 +184,19 @@ public class SneakerController {
             }
         }
     }
-    private void displayEmployee(){
-        if(employees.size() != 0){
-            for (Employee employee : employees){
+
+    private void displayEmployee() {
+        if (!employees.isEmpty()) {
+            for (Employee employee : employees) {
                 System.out.println(employee);
-        }
-        }else{
+            }
+        } else {
             System.out.println("Danh sách nhân viên rỗng!!!");
         }
 
     }
-    private void addNewEmployee(){
+
+    private void addNewEmployee() {
         System.out.println("========= Thêm Nhân Viên =========");
         String code;
         while (true) {
@@ -218,7 +212,7 @@ public class SneakerController {
         String name = scanner.nextLine();
         String dateofbirth;
         while (true) {
-            System.out.print("Enter Employee Birth Date (dd/MM/yyyy): ");
+            System.out.print("Enter Employee Birth Date (dd/MM/yyyy): \n");
             dateofbirth = scanner.nextLine();
             if (InputValidator.isValidDate(dateofbirth)) {
                 break;
@@ -228,7 +222,7 @@ public class SneakerController {
         }
         String gender;
         while (true) {
-            System.out.print("Enter Employee Gender (nam/nữ): ");
+            System.out.print("Enter Employee Gender (nam/nữ): \n");
             gender = scanner.nextLine();
             if (InputValidator.isValidGender(gender)) {
                 break;
@@ -238,7 +232,7 @@ public class SneakerController {
         }
         String cccd;
         while (true) {
-            System.out.print("Enter Employee CCCD (must start with 079 and have 12 digits): ");
+            System.out.print("Enter Employee CCCD (must start with 079 and have 12 digits): \n");
             cccd = scanner.nextLine();
             if (InputValidator.isValidCCCD(cccd)) {
                 break;
@@ -248,7 +242,7 @@ public class SneakerController {
         }
         String phone;
         while (true) {
-            System.out.print("Enter Employee Phone Number (must start with 09 and have 10 digits): ");
+            System.out.print("Enter Employee Phone Number (must start with 09 and have 10 digits): \n");
             phone = scanner.nextLine();
             if (InputValidator.isValidPhoneNumber(phone)) {
                 break;
@@ -258,31 +252,33 @@ public class SneakerController {
         }
         System.out.println("Vị trí: ");
         String position = scanner.nextLine();
-        Employee newEmployee = new Employee( code,  name,  dateofbirth,  gender,  cccd,  phone,  position);
+        Employee newEmployee = new Employee(code, name, dateofbirth, gender, cccd, phone, position);
         employees.add(newEmployee);
-        FileUtil.writeToFile(EMPLOYEE_FILE, newEmployee.convertData());
+        FileUtil.writeEmployeeToFile(EMPLOYEE_FILE, employees);
         System.out.println("Đăng ký thành công!");
 
     }
-    private void deleteEmployees(){
+
+    private void deleteEmployees() {
         System.out.println("========== Xoá Nhân Viên =============");
         System.out.println("Nhập mã nhân viên muốn xóa: ");
         String code = scanner.nextLine();
         Employee employeeToDelete = null;
-        for( Employee employee : employees){
-            if (employee.getCode().equals(code)){
+        for (Employee employee : employees) {
+            if (employee.getCode().equals(code)) {
                 employeeToDelete = employee;
                 break;
 
             }
         }
-        if(employeeToDelete != null){
+        if (employeeToDelete != null) {
             employees.remove(employeeToDelete);
+            System.out.println(employees);
             saveEmployees();
-            System.out.println("Nhân viên với mã "+code+" đã được xóa!");
+            System.out.println("Nhân viên với mã " + code + " đã được xóa!");
 
-        }else {
-            System.out.println("Không tìm thấy nhân viên với mã "+code);
+        } else {
+            System.out.println("Không tìm thấy nhân viên với mã " + code);
         }
 
     }
@@ -290,14 +286,15 @@ public class SneakerController {
 
     private void saveEmployees() {
         List<String> lines = new ArrayList<>();
+        System.out.println(employees);
         for (Employee employee : employees) {
             lines.add(employee.convertData());
         }
-        FileUtil.writeToFile(EMPLOYEE_FILE, String.valueOf(lines));
+        FileUtil.writeEmployeeToFile(EMPLOYEE_FILE, employees);
     }
 
-    public void displayCustomerManagement(){
-        while (true){
+    public void displayCustomerManagement() {
+        while (true) {
             System.out.println(" ====================================");
             System.out.println("|        Customer Management         |");
             System.out.println("|                                    |");
@@ -309,7 +306,7 @@ public class SneakerController {
             System.out.print("Choose a option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
-            switch (choice){
+            switch (choice) {
                 case 1:
                     displayCustomer();
                     break;
@@ -327,18 +324,18 @@ public class SneakerController {
         }
     }
 
-    private void displayCustomer(){
-        if(customers.size() != 0){
-            for (Customer customer : customers){
+    private void displayCustomer() {
+        if (!customers.isEmpty()) {
+            for (Customer customer : customers) {
                 System.out.println(customer);
             }
-        }else{
+        } else {
             System.out.println("Danh sách khách hàng rỗng!!!");
         }
 
     }
 
-    private void addNewCustomer(){
+    private void addNewCustomer() {
         System.out.println("========= Thêm Khách Hàng =========");
         String code;
         while (true) {
@@ -374,7 +371,7 @@ public class SneakerController {
         }
         String phone;
         while (true) {
-            System.out.print("Số điện thoai (bắt đầu bằng 09 và có 10 số: ");
+            System.out.print("Số điện thoai (bắt đầu bằng 09 và có 10 số: \n");
             phone = scanner.nextLine();
             if (InputValidator.isValidPhoneNumber(phone)) {
                 break;
@@ -384,31 +381,33 @@ public class SneakerController {
         }
         System.out.println("Địa chỉ: ");
         String address = scanner.nextLine();
-        Customer newCustomer = new Customer( code,  name,  dateofbirth,  gender,  phone,  address);
+        Customer newCustomer = new Customer(code, name, dateofbirth, gender, phone, address);
         customers.add(newCustomer);
-        FileUtil.writeToFile(CUSTOMER_FILE, newCustomer.convertData());
-        System.out.println("Khách với mã khách hàng là "+code+" đã được thêm thành công!");
+        System.out.println(customers);
+        FileUtil.writeCustomerToFile(CUSTOMER_FILE, customers);
+        System.out.println("Khách với mã khách hàng là " + code + " đã được thêm thành công!");
 
     }
-    private void deleteCustomer(){
+
+    private void deleteCustomer() {
         System.out.println("========== Xoá Khách Hàng =============");
         System.out.println("Nhập mã khách hàng muốn xóa: ");
         String code = scanner.nextLine();
         Customer customerToDelete = null;
-        for(Customer customer : customers){
-            if (customer.getCode().equals(code)){
+        for (Customer customer : customers) {
+            if (customer.getCode().equals(code)) {
                 customerToDelete = customer;
                 break;
 
             }
         }
-        if(customerToDelete != null){
+        if (customerToDelete != null) {
             employees.remove(customerToDelete);
 
-            System.out.println("Nhân viên với mã "+code+" đã được xóa!");
+            System.out.println("Nhân viên với mã " + code + " đã được xóa!");
 
-        }else {
-            System.out.println("Không tìm thấy nhân viên với mã "+code);
+        } else {
+            System.out.println("Không tìm thấy nhân viên với mã " + code);
         }
 
     }
@@ -419,7 +418,84 @@ public class SneakerController {
         for (Customer customer : customers) {
             lines.add(customer.convertData());
         }
-        FileUtil.writeToFile(CUSTOMER_FILE, lines.toString());
+        FileUtil.writeCustomerToFile(CUSTOMER_FILE, customers);
     }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void saleManagement() {
+        System.out.println("Product List:");
+        for (int i = 0; i < products.size(); i++) {
+            System.out.println((i + 1) + ". " + products.get(i));
+        }
+
+        // Chọn sản phẩm
+        System.out.print("Please choose a product (enter number): ");
+        int productChoice = scanner.nextInt();
+        Product selectedProduct = products.get(productChoice - 1);
+        System.out.println("Customer List:");
+        for (int i = 0; i < customers.size(); i++) {
+            System.out.println((i + 1) + ". " + customers.get(i));
+        }
+
+        // Chọn khách hàng
+        System.out.print("Please choose a customer (enter number): ");
+        int customerChoice = scanner.nextInt();
+        Customer selectedCustomer = customers.get(customerChoice - 1);
+
+        // Lưu sản phẩm và khách hàng vào file
+        saveProductCustomer(selectedProduct, selectedCustomer, "src/data/sale.csv");
+    }
+
+    public static void saveProductCustomer(Product product, Customer customer, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+            writer.write(product.convertData() + "," + customer.convertData());
+            writer.newLine();
+            System.out.println("Saved successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void displayProductCustomer() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/data/sale.csv"))) {
+            String line;
+            System.out.println("Product and Customer List:");
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length == 12) {  // Kiểm tra xem dòng có đủ 11 phần tử không
+                    // Phân tích dữ liệu sản phẩm
+                    String productId = data[0];
+                    String productName = data[1];
+                    String productSize = data[2];
+                    String productQuantity = data[3];
+                    String productCondition = data[4];
+                    String productPrice = data[5];
+
+                    // Phân tích dữ liệu khách hàng
+                    String customerId = data[6];
+                    String customerName = data[7];
+                    String customerDob = data[8];
+                    String customerGender = data[9];
+                    String customerPhone = data[10];
+                    String customerAddress = data[11];
+
+                    // Hiển thị thông tin sản phẩm và khách hàng
+                    System.out.println("Product: [code: " + productId + ", Name: " + productName + ", Size: " + productSize +
+                            ", Quantity: " + productQuantity + ", Condition: " + productCondition + ", Price: " + productPrice + "]");
+                    System.out.println("Customer: [ID: " + customerId + ", Name: " + customerName + ", DOB: " + customerDob +
+                            ", Gender: " + customerGender + ", Phone: " + customerPhone + ", Address: " + customerAddress);
+                    System.out.println();
+                } else {
+                    System.out.println("Malformed line: " + line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

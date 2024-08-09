@@ -1,12 +1,20 @@
 package controllers;
 
+import Utility.EmptyFileException;
+import model.Employee;
+import model.User;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class DisplayAccountMenu {
     public static Scanner scanner = new Scanner(System.in);
     SneakerController sneekercontroller = new SneakerController();
 
-        public void displayAccountMenu(){
+    public DisplayAccountMenu() throws EmptyFileException {
+    }
+
+    public void displayAccountMenu() throws EmptyFileException {
             while(true){
                 System.out.println(" ====================================");
                 System.out.println("|      Sneaker Store Management      |");
@@ -30,12 +38,24 @@ public class DisplayAccountMenu {
                         }
                         break;
                     case 3:
-                        System.out.println("Cảm ơn vì đã sử dụng ứng dụng");
-                        System.exit(0);
+                        disAccoutUser();
+//                        System.out.println("Cảm ơn vì đã sử dụng ứng dụng");
+//                        System.exit(0);
                         break;
                     default:
                         System.out.println("Lựa chọn không hợp lệ, vui lòng chọn lại!");
                 }
+            }
+        }
+
+        public void disAccoutUser() throws EmptyFileException {
+            List<User> users = new SneakerController().getUsers();
+            if(!users.isEmpty()){
+                for (User user : users){
+                    System.out.println(user);
+                }
+            }else{
+                System.out.println("Danh sách nhân viên rỗng!!!");
             }
         }
     }

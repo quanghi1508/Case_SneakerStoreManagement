@@ -81,7 +81,7 @@ public class Employee {
     }
 
     public String convertData() {
-        return " " + code + "," + name + "," + dateofbirth + "," + gender + "," + cccd + "," + phone+ "," +position;
+        return String.join(",", code,name,dateofbirth,gender,cccd,phone,position);
     }
 
     @Override

@@ -1,8 +1,10 @@
 package controllers;
 
+import Utility.EmptyFileException;
 import model.Customer;
 import model.Employee;
 import model.Product;
+import model.User;
 import utils.FileUtil;
 
 import java.util.ArrayList;
@@ -16,42 +18,34 @@ public class ShoppingCartController {
     private static final String EMPLOYEE_FILE = "src/data/employees.csv";
     private static final String CART_FILE = "src/data/cart.csv";
     private static final String PRODUCT_FILE = "src/data/products.csv";
+    private static final String USER_FILE = "src/data/users.csv";
 
     private List<Product> products;
     private List<Customer> customers;
     private List<Employee> employees;
     private List<Product> cart;
+    public List<User> users;
 
-    public ShoppingCartController() {
+    public ShoppingCartController() throws EmptyFileException {
+        users = loadUsers();
         products = loadProducts();
         customers = loadCustomers();
         employees = loadEmployees();
         cart = new ArrayList<Product>();
     }
 
+    public List<User> loadUsers() throws EmptyFileException {
+        return FileUtil.readUserFromFile(USER_FILE);
+    }
+
     public List<Product> loadProducts(){
-        List<Product> products = new ArrayList<>();
-        List<String> lines = FileUtil.readFromFile(PRODUCT_FILE);
-        for(String line : lines){
-            products.add(Product.fromCSV(line));
-        }
-        return products;
+       return FileUtil.readProductFromFile(PRODUCT_FILE);
     }
     public List<Customer> loadCustomers(){
-        List<Customer> customers = new ArrayList<>();
-        List<String> lines = FileUtil.readFromFile(CUSTOMER_FILE);
-        for(String line : lines){
-            customers.add(Customer.fromCSV(line));
-        }
-        return customers;
+        return FileUtil.readCustomerFromFile(CUSTOMER_FILE);
     }
     public List<Employee> loadEmployees(){
-        List<Employee> employees = new ArrayList<>();
-        List<String> lines = FileUtil.readFromFile(EMPLOYEE_FILE);
-        for(String line : lines){
-            employees.add(Employee.fromCSV(line));
-        }
-        return employees;
+        return FileUtil.readEmployeeFromFile(EMPLOYEE_FILE);
     }
 
 
@@ -111,7 +105,7 @@ public class ShoppingCartController {
         if (selectedProduct != null){
             cart.add(selectedProduct);
             System.out.println("Sản phẩm "+selectedProduct+" đã được thêm vào giỏ hàng.");
-            FileUtil.writeToFile(CART_FILE, selectedProduct.convertData());
+            FileUtil.writeProductToFile(CART_FILE, cart);
         }else {
             System.out.println("Không tìm thấy sản phẩm!");
         }
